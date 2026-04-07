@@ -263,5 +263,3 @@ Tighten spacing, typography, and transitions. Run 10+ test generations across al
 ```
 
 ---
-
-*Architecture authored for SPEC.md v1.0. Revisit after Issue 4 to adjust prompt strategy based on observed AI output quality.*
