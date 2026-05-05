@@ -3,8 +3,6 @@ export type RecipeIngredient = {
   amount: string;
 };
 
-export type Emotion = "calm" | "excited" | "romantic" | "reflective";
-
 export type FlavorTag =
   | "light"
   | "herbal"
@@ -17,7 +15,11 @@ export type FlavorTag =
   | "complex"
   | "bold"
   | "warming"
-  | "floral";
+  | "floral"
+  | "bitter"
+  | "fruity"
+  | "spicy"
+  | "earthy";
 
 export type CocktailRecipe = {
   name: string;
@@ -30,7 +32,8 @@ export type CocktailRecipe = {
 };
 
 export type GenerateRequest = {
-  emotion: Emotion;
+  /** Free-text vibe the drink should match; keep concise (max ~200 chars). */
+  vibe: string;
   ingredients?: string[];
 };
 
