@@ -5,12 +5,11 @@ export const recipeIngredientSchema = z.object({
   amount: z.string(),
 });
 
-export const emotionSchema = z.enum([
-  "calm",
-  "excited",
-  "romantic",
-  "reflective",
-]);
+export const vibeSchema = z
+  .string()
+  .trim()
+  .min(1, "Describe your vibe")
+  .max(200, "Keep it under 200 characters");
 
 export const flavorTagSchema = z.enum([
   "light",
@@ -25,6 +24,10 @@ export const flavorTagSchema = z.enum([
   "bold",
   "warming",
   "floral",
+  "bitter",
+  "fruity",
+  "spicy",
+  "earthy",
 ]);
 
 export const cocktailRecipeSchema = z.object({
@@ -38,7 +41,7 @@ export const cocktailRecipeSchema = z.object({
 });
 
 export const generateRequestSchema = z.object({
-  emotion: emotionSchema,
+  vibe: vibeSchema,
   ingredients: z.array(z.string()).optional(),
 });
 
