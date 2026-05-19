@@ -9,7 +9,7 @@ export const vibeSchema = z
   .string()
   .trim()
   .min(1, "Describe your vibe")
-  .max(500);
+  .max(200, "Keep it under 200 characters");
 
 export const flavorTagSchema = z.enum([
   "light",
@@ -38,12 +38,20 @@ export const cocktailRecipeSchema = z.object({
   steps: z.array(z.string()),
   prepTime: z.string(),
   moodExplanation: z.string(),
+  liquidColor: z.string().optional(),
+  visualBrief: z.string().optional(),
+  garnish: z.string().optional(),
+  glassStyle: z.string().optional(),
 });
 
 export const generateRequestSchema = z.object({
   vibe: vibeSchema,
   ingredients: z.array(z.string()).optional(),
 });
+
+export type FlavorTag = z.infer<typeof flavorTagSchema>;
+export type GenerateRequestInput = z.infer<typeof generateRequestSchema>;
+export type CocktailRecipe = z.infer<typeof cocktailRecipeSchema>;
 
 export const apiResponseSchema = z.discriminatedUnion("success", [
   z.object({

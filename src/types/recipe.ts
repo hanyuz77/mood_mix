@@ -32,7 +32,7 @@ export type CocktailRecipe = {
 };
 
 export type GenerateRequest = {
-  /** Free-text vibe the drink should match (e.g. "melancholic but hopeful", "post-run clarity"). */
+  /** Free-text vibe the drink should match; keep concise (max ~200 chars). */
   vibe: string;
   ingredients?: string[];
 };
