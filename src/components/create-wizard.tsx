@@ -58,7 +58,6 @@ export function CreateWizard() {
 
   async function fetchCocktailImage(data: CocktailRecipe) {
     setImageLoading(true);
-    setImageError(null);
     setImageSrc(null);
     try {
       const imgRes = await fetch("/api/image", {
@@ -76,10 +75,8 @@ export function CreateWizard() {
         throw new Error(imgJson.error ?? "Photo unavailable.");
       }
       setImageSrc(imgJson.image);
-    } catch (e) {
-      setImageError(
-        e instanceof Error ? e.message : "Photo unavailable — recipe is ready.",
-      );
+    } catch {
+      // image failed — recipe still shown with fallback
     } finally {
       setImageLoading(false);
     }
@@ -90,7 +87,6 @@ export function CreateWizard() {
     setLoadingPhase("recipe");
     setError(null);
     setImageSrc(null);
-    setImageError(null);
     const fromInput = parseIngredients(ingredientInput);
     const ingredients = Array.from(
       new Set([...selectedIngredients, ...fromInput]),
@@ -132,7 +128,7 @@ export function CreateWizard() {
         imageLoading={imageLoading}
         vibe={vibe}
         saved={isSaved(recipe.name)}
-        onBack={() => { setStep(1); setRecipe(null); setImageSrc(null); setImageError(null); setShowRecipe(false); }}
+        onBack={() => { setStep(1); setRecipe(null); setImageSrc(null); }}
         onSave={() => addFavorite(recipe, vibe, imageSrc)}
         onViewFavorites={() => router.push("/favorites")}
       />
