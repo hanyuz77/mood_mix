@@ -15,3 +15,8 @@ out/
 .gstack/
 *.pyc
 __pycache__/
+
+# auto-generated
+next-env.d.ts
+tsconfig.tsbuildinfo
+.vercel/
