@@ -30,6 +30,11 @@ export const flavorTagSchema = z.enum([
   "earthy",
 ]);
 
+export const snackPairingSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+});
+
 export const cocktailRecipeSchema = z.object({
   name: z.string(),
   tagline: z.string(),
@@ -42,6 +47,8 @@ export const cocktailRecipeSchema = z.object({
   visualBrief: z.string().optional(),
   garnish: z.string().optional(),
   glassStyle: z.string().optional(),
+  tip: z.string().optional(),
+  snackPairings: z.array(snackPairingSchema).optional(),
 });
 
 export const generateRequestSchema = z.object({

@@ -15,23 +15,18 @@ function level(tags: FlavorTag[], profile: FlavorTag[]): number {
 
 export function FlavorProfile({ profile }: { profile: FlavorTag[] }) {
   return (
-    <div className="space-y-4">
-      <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-warm">
-        Flavor profile
-      </p>
-      <div className="space-y-3.5">
-        {SLIDER_LABELS.map(({ key, tags }) => (
-          <div key={key} className="grid grid-cols-[4.5rem_1fr] items-center gap-4">
-            <span className="text-sm text-muted-warm">{key}</span>
-            <div className="relative h-px bg-border">
-              <span
-                className="absolute top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-charcoal transition-all duration-700"
-                style={{ left: `${level(tags, profile)}%` }}
-              />
-            </div>
+    <div className="space-y-3.5">
+      {SLIDER_LABELS.map(({ key, tags }) => (
+        <div key={key} className="grid grid-cols-[4.5rem_1fr] items-center gap-4">
+          <span className="text-sm text-muted-warm">{key}</span>
+          <div className="h-1.5 w-full rounded-full bg-border/60">
+            <div
+              className="h-full rounded-full bg-charcoal/70 transition-all duration-700"
+              style={{ width: `${level(tags, profile)}%` }}
+            />
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -17,7 +17,9 @@ Return ONLY valid JSON matching this shape (no markdown, no commentary):
   "liquidColor": string (exact drink color from ingredients; do NOT default to orange unless appropriate),
   "visualBrief": string (one sentence: foam/ice, garnish, glass, lighting),
   "garnish": string (short),
-  "glassStyle": string (short)
+  "glassStyle": string (short),
+  "tip": string (one bartender tip, 1 sentence),
+  "snackPairings": [{"name": string, "description": string}, ...] (3 food pairings that complement the drink)
 }
 Prefer realistic home-bar ingredients. Match liquidColor to spirits and mixers. If the user lists ingredients on hand, use those when possible.`;
 

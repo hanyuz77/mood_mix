@@ -1,16 +1,15 @@
 "use client";
 
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
-  ArrowLeft,
   ArrowRight,
   Loader2,
-  ShoppingBag,
   Sparkles,
+  UtensilsCrossed,
 } from "lucide-react";
 
-import { FlavorProfile } from "@/components/flavor-profile";
+import { RecipeDetail } from "@/components/recipe-detail";
 import { PremiumButton } from "@/components/premium-button";
 import {
   buildVibeFromMood,
@@ -20,6 +19,7 @@ import {
 } from "@/lib/moods";
 import type { CocktailRecipe } from "@/lib/schemas/recipe";
 import { cn } from "@/lib/utils";
+import { useFavorites } from "@/lib/favorites";
 
 const CUSTOM_MAX = 200;
 const RESULT_IMAGE =
@@ -42,8 +42,10 @@ function formatTags(profile: CocktailRecipe["flavorProfile"]): string {
 }
 
 export function CreateWizard() {
+  const router = useRouter();
+  const { addFavorite, isSaved } = useFavorites();
   const [step, setStep] = useState<Step>(1);
-  const [mood, setMood] = useState<MoodId | null>("relaxed");
+  const [mood, setMood] = useState<MoodId | null>("cozy");
   const [customFeeling, setCustomFeeling] = useState("");
   const [ingredientInput, setIngredientInput] = useState("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
@@ -135,161 +137,16 @@ export function CreateWizard() {
 
   if (step === 3 && recipe) {
     return (
-      <div className="flex flex-1 flex-col px-6 py-8 lg:px-14 lg:py-12">
-        <button
-          type="button"
-          onClick={() => {
-            setStep(1);
-            setRecipe(null);
-            setImageSrc(null);
-            setImageError(null);
-            setShowRecipe(false);
-          }}
-          className="mb-8 flex items-center gap-2 text-sm text-muted-warm transition-colors hover:text-charcoal"
-        >
-          <ArrowLeft className="size-4" />
-          Start over
-        </button>
-
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-10 lg:gap-14">
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-warm">
-              Your cocktail
-            </p>
-            <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-charcoal sm:text-5xl">
-              {recipe.name}
-            </h1>
-            <p className="mt-3 text-sm font-medium text-muted-warm">
-              {formatTags(recipe.flavorProfile)}
-            </p>
-            <p className="mt-6 text-base leading-relaxed text-charcoal/90">
-              {recipe.moodExplanation}
-            </p>
-            <p className="mt-4 font-serif text-lg italic text-muted-warm">
-              &ldquo;{recipe.tagline}&rdquo;
-            </p>
-
-            <div className="mt-8 grid grid-cols-3 gap-4 border-y border-border/80 py-6">
-              <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-warm">
-                  Difficulty
-                </p>
-                <p className="mt-1 text-sm text-charcoal">Easy</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-warm">
-                  Prep time
-                </p>
-                <p className="mt-1 text-sm text-charcoal">{recipe.prepTime}</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-warm">
-                  Alcohol
-                </p>
-                <p className="mt-1 text-sm text-charcoal">Moderate</p>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <FlavorProfile profile={recipe.flavorProfile} />
-            </div>
-
-            <PremiumButton
-              type="button"
-              className="mt-10 w-full sm:w-auto"
-              onClick={() => setShowRecipe((v) => !v)}
-            >
-              {showRecipe ? "Hide full recipe" : "View full recipe"}
-            </PremiumButton>
-
-          </div>
-
-          <div className="relative mx-auto w-full max-w-[15rem] shrink-0 sm:mx-0 sm:w-64 lg:w-72">
-            <div className="relative aspect-[3/4] w-full bg-ivory">
-              {imageSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={imageSrc.slice(0, 64)}
-                  src={imageSrc}
-                  alt={recipe.name}
-                  className="h-full w-full object-contain object-center mix-blend-multiply"
-                />
-              ) : (
-                <div className="relative h-full w-full">
-                  <Image
-                    src={RESULT_IMAGE}
-                    alt=""
-                    fill
-                    className={cn(
-                      "object-contain object-center transition-opacity duration-500",
-                      imageLoading ? "opacity-40" : "opacity-100",
-                    )}
-                    sizes="(max-width: 768px) 100vw, 18rem"
-                  />
-                </div>
-              )}
-              {imageLoading && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                  <Loader2 className="size-8 animate-spin text-olive" />
-                  <p className="text-sm font-medium text-muted-warm">
-                    Catching the light…
-                  </p>
-                </div>
-              )}
-            </div>
-            {imageError && !imageLoading && (
-              <p className="mt-2 text-center text-xs text-muted-warm sm:text-left">
-                {imageError}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {showRecipe && (
-          <div className="mt-12 max-w-3xl space-y-10 border-t border-border/80 pt-12">
-            <div>
-              <h2 className="font-serif text-2xl text-charcoal">Ingredients</h2>
-              <ul className="mt-4 space-y-2">
-                {recipe.ingredients.map((ing) => (
-                  <li
-                    key={ing.item}
-                    className="flex gap-4 text-sm text-charcoal"
-                  >
-                    <span className="w-20 shrink-0 text-right text-muted-warm">
-                      {ing.amount}
-                    </span>
-                    <span>{ing.item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h2 className="font-serif text-2xl text-charcoal">Instructions</h2>
-              <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-relaxed text-charcoal/90">
-                {recipe.steps.map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
-              </ol>
-            </div>
-            {(recipe.garnish || recipe.glassStyle) && (
-              <div className="rounded-2xl bg-stone/60 p-6 text-sm text-charcoal">
-                {recipe.garnish && (
-                  <p>
-                    <span className="text-muted-warm">Garnish · </span>
-                    {recipe.garnish}
-                  </p>
-                )}
-                {recipe.glassStyle && (
-                  <p className={recipe.garnish ? "mt-2" : ""}>
-                    <span className="text-muted-warm">Glass · </span>
-                    {recipe.glassStyle}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      <RecipeDetail
+        recipe={recipe}
+        imageSrc={imageSrc}
+        imageLoading={imageLoading}
+        vibe={vibe}
+        saved={isSaved(recipe.name)}
+        onBack={() => { setStep(1); setRecipe(null); setImageSrc(null); setImageError(null); setShowRecipe(false); }}
+        onSave={() => addFavorite(recipe, vibe, imageSrc)}
+        onViewFavorites={() => router.push("/favorites")}
+      />
     );
   }
 
@@ -305,12 +162,11 @@ export function CreateWizard() {
             How are you feeling?
           </h1>
           <p className="mt-2 text-center text-sm text-muted-warm">
-            Choose a mood, then tell us about the night.
+            Choose a mood, then tell us about the moment.
           </p>
 
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="mt-10 -mx-6 flex gap-2 overflow-x-auto px-6 pb-2 lg:-mx-14 lg:px-14 xl:-mx-20 xl:px-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {MOODS.map((m) => {
-              const Icon = m.icon;
               const selected = mood === m.id;
               return (
                 <button
@@ -318,19 +174,13 @@ export function CreateWizard() {
                   type="button"
                   onClick={() => setMood(m.id)}
                   className={cn(
-                    "flex flex-col items-start rounded-2xl border px-4 py-5 text-left transition-all duration-300",
-                    m.surface,
+                    "shrink-0 rounded-full border px-5 py-2.5 text-sm font-medium transition-all duration-200",
                     selected
-                      ? "ring-2 ring-olive ring-offset-2 ring-offset-ivory"
-                      : "hover:shadow-soft",
-                    m.border,
+                      ? "border-olive bg-olive text-ivory"
+                      : "border-border bg-card text-charcoal hover:border-olive/50 hover:bg-stone/60",
                   )}
                 >
-                  <Icon className="mb-3 size-5 text-charcoal/70" strokeWidth={1.5} />
-                  <span className="text-sm font-medium text-charcoal">{m.label}</span>
-                  <span className="mt-1 text-xs leading-snug text-charcoal/60">
-                    {m.description}
-                  </span>
+                  <span className="mr-1.5">{m.emoji}</span>{m.label}
                 </button>
               );
             })}
@@ -338,14 +188,14 @@ export function CreateWizard() {
 
           <label className="mt-10 block">
             <span className="text-sm font-medium text-charcoal">
-              What kind of night is this?
+              What are you feeling right now?
             </span>
             <textarea
               value={customFeeling}
               onChange={(e) =>
                 setCustomFeeling(e.target.value.slice(0, CUSTOM_MAX))
               }
-              placeholder="cozy rainy evening with jazz and candles…"
+              placeholder="ex. cozy rainy evening with jazz and candles…"
               rows={3}
               className="mt-2 w-full resize-none rounded-xl border border-border bg-card px-4 py-3 text-sm text-charcoal shadow-xs transition-shadow placeholder:text-muted-warm/80 focus:border-olive focus:outline-none focus:ring-2 focus:ring-olive/20"
             />
@@ -378,7 +228,7 @@ export function CreateWizard() {
           <label className="mt-10 block">
             <span className="sr-only">Ingredients</span>
             <div className="relative">
-              <ShoppingBag className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-warm" />
+              <UtensilsCrossed className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-warm" />
               <input
                 type="text"
                 value={ingredientInput}

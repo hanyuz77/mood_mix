@@ -1,98 +1,57 @@
-import type { LucideIcon } from "lucide-react";
-import {
-  Compass,
-  Flame,
-  Heart,
-  Moon,
-  Sparkles,
-  Sun,
-} from "lucide-react";
-
 export type MoodId =
-  | "relaxed"
-  | "romantic"
-  | "reflective"
-  | "excited"
-  | "adventurous"
-  | "confident";
+  | "cozy"
+  | "flirty"
+  | "energetic"
+  | "feral"
+  | "chaotic"
+  | "lovestruck"
+  | "sultry"
+  | "melancholic"
+  | "bittersweet"
+  | "heartbroken"
+  | "nostalgic"
+  | "fierce"
+  | "unhinged";
 
 export type MoodOption = {
   id: MoodId;
   label: string;
-  description: string;
-  icon: LucideIcon;
-  surface: string;
-  border: string;
+  emoji: string;
 };
 
 export const MOODS: MoodOption[] = [
-  {
-    id: "relaxed",
-    label: "Relaxed",
-    description: "Unhurried, soft, and grounding",
-    icon: Moon,
-    surface: "bg-[#d4e3d0] border-[#c5d4c0]",
-    border: "border-[#b8c9b3]",
-  },
-  {
-    id: "romantic",
-    label: "Romantic",
-    description: "Intimate, warm, and candlelit",
-    icon: Heart,
-    surface: "bg-[#e8d4cf] border-[#ddc4be]",
-    border: "border-[#d4b8ae]",
-  },
-  {
-    id: "reflective",
-    label: "Reflective",
-    description: "Quiet, thoughtful, inward",
-    icon: Sparkles,
-    surface: "bg-[#ddd6eb] border-[#d0c8e0]",
-    border: "border-[#c4bad8]",
-  },
-  {
-    id: "excited",
-    label: "Excited",
-    description: "Bright, social, effervescent",
-    icon: Sun,
-    surface: "bg-[#ebe4d4] border-[#e0d8c8]",
-    border: "border-[#d4cbb8]",
-  },
-  {
-    id: "adventurous",
-    label: "Adventurous",
-    description: "Bold, curious, off-menu",
-    icon: Compass,
-    surface: "bg-[#ddd8ce] border-[#d0cbc0]",
-    border: "border-[#c4bfb4]",
-  },
-  {
-    id: "confident",
-    label: "Confident",
-    description: "Assured, polished, decisive",
-    icon: Flame,
-    surface: "bg-[#e5ddd2] border-[#dbd2c6]",
-    border: "border-[#cfc4b6]",
-  },
+  { id: "cozy",        label: "Cozy",        emoji: "🕯️" },
+  { id: "flirty",      label: "Flirty",      emoji: "😘" },
+  { id: "energetic",   label: "Energetic",   emoji: "⚡" },
+  { id: "feral",       label: "Feral",       emoji: "🐺" },
+  { id: "chaotic",     label: "Chaotic",     emoji: "🌀" },
+  { id: "lovestruck",  label: "Lovestruck",  emoji: "💘" },
+  { id: "sultry",      label: "Sultry",      emoji: "🔥" },
+  { id: "melancholic", label: "Melancholic", emoji: "🌧️" },
+  { id: "bittersweet", label: "Bittersweet", emoji: "🍂" },
+  { id: "heartbroken", label: "Heartbroken", emoji: "💔" },
+  { id: "nostalgic",   label: "Nostalgic",   emoji: "📻" },
+  { id: "fierce",      label: "Fierce",      emoji: "🦁" },
+  { id: "unhinged",    label: "Unhinged",    emoji: "🫠" },
 ];
 
 export const SUGGESTED_INGREDIENTS = [
-  "Rum",
   "Vodka",
   "Gin",
-  "Bourbon",
+  "Rum",
   "Tequila",
-  "Campari",
-  "Lime",
+  "Whiskey",
+  "Prosecco",
   "Lemon",
-  "Simple syrup",
-  "Honey",
-  "Mint",
+  "Lime",
+  "Orange juice",
   "Ginger beer",
-  "Orange bitters",
-  "Egg white",
-  "Coffee liqueur",
-  "Champagne",
+  "Mint",
+  "Honey",
+  "Soda water",
+  "Espresso",
+  "Coconut milk",
+  "Bitters",
 ];
 
 export function buildVibeFromMood(

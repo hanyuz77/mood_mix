@@ -1,15 +1,17 @@
 import type { CocktailRecipe } from "@/lib/schemas/recipe";
 
 const STYLE_PREFIX =
-  "Elegant watercolor cocktail illustration, hand-painted bar menu spot art. " +
-  "Single cocktail centered on warm off-white cream background, soft shadow beneath the glass. " +
-  "Delicate ink outlines, visible soft brushstrokes, translucent watercolor washes, painterly not photorealistic. " +
-  "Editorial lifestyle magazine aesthetic, minimalist composition, generous negative space around the drink. " +
+  "Professional cocktail photography, shot on a full-frame DSLR, 85mm lens, shallow depth of field. " +
+  "The drink fills the entire frame — glass crops slightly at edges, no empty space around it. " +
+  "Soft diffused natural light, subtle condensation on the glass. " +
+  "Background: warm beige, soft linen, creamy off-white, or pale sand — NOT gray, NOT white, NOT amber, NOT orange. " +
+  "Background should feel like warm parchment or aged linen; only the drink itself carries strong color. " +
+  "Photorealistic, high-resolution, editorial Kinfolk / Wallpaper* magazine aesthetic. " +
   "No text, no lettering, no logos, no hands, no watermark, no border frame.";
 
 const POLLINATIONS_MODEL = "flux";
-const POLLINATIONS_WIDTH = 768;
-const POLLINATIONS_HEIGHT = 768;
+const POLLINATIONS_WIDTH = 1024;
+const POLLINATIONS_HEIGHT = 1365;
 
 function imageProvider(): string {
   return (process.env.IMAGE_PROVIDER ?? "pollinations").trim().toLowerCase();
@@ -27,21 +29,47 @@ export function imageGenerationAvailable(): boolean {
   return true;
 }
 
-function liquidColor(recipe: CocktailRecipe): string {
+function deriveColor(recipe: CocktailRecipe): string {
+  const items = recipe.ingredients.map((i) => i.item.toLowerCase()).join(" ");
+
+  if (items.includes("blue curacao") || items.includes("butterfly pea"))
+    return "deep electric blue";
+  if (items.includes("matcha")) return "opaque green";
+  if (items.includes("espresso") || (items.includes("coffee") && items.includes("liqueur")))
+    return "near-black dark brown with a thick ivory foam head";
+  if (items.includes("blackberry") || items.includes("cassis") || items.includes("blueberry"))
+    return "deep purple";
+  if (items.includes("grenadine") || items.includes("campari") || items.includes("cranberry"))
+    return "deep red to ruby";
+  if (items.includes("raspberry") || items.includes("strawberry") || items.includes("watermelon"))
+    return "bright pink";
+  if (items.includes("elderflower") || items.includes("cucumber") || items.includes("green tea"))
+    return "pale clear with a light green hue";
+  if (items.includes("lavender")) return "soft pale purple";
+  if (items.includes("mango") || items.includes("passion fruit") || items.includes("peach"))
+    return "golden yellow";
+  if (items.includes("champagne") || items.includes("prosecco"))
+    return "pale gold with fine rising bubbles";
+  if (items.includes("gin") || items.includes("vodka"))
+    return "crystal clear or very pale";
+  if (items.includes("bourbon") || items.includes("whiskey") || items.includes("rum"))
+    return "amber — but only the liquid, not the background";
+
+  // fallback to AI-provided then to generic
   if (recipe.liquidColor?.trim()) return recipe.liquidColor.trim();
-  if (recipe.visualBrief?.trim()) return recipe.visualBrief.trim();
-  return "color true to the listed ingredients, not generic orange";
+  return "pale clear";
 }
 
 export function buildImagePrompt(recipe: CocktailRecipe): string {
-  const color = liquidColor(recipe);
+  const color = deriveColor(recipe);
   const glass = recipe.glassStyle?.trim() || "appropriate cocktail glass";
   const garnish = recipe.garnish?.trim() || "minimal garnish";
   return (
     `${STYLE_PREFIX} ` +
-    `Liquid color MUST be ${color}. ` +
-    `Do not make the drink orange unless the recipe is orange-based. ` +
-    `Glass: ${glass}. Garnish: ${garnish}.`
+    `Close-up: a ${glass} fills the entire frame. ` +
+    `THE LIQUID COLOR IS ${color.toUpperCase()} — this is the most important detail, do not change it. ` +
+    `Do NOT default to amber, orange, or brown unless explicitly stated above. ` +
+    `Garnish: ${garnish}.`
   );
 }
 

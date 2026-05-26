@@ -4,21 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bookmark,
-  Compass,
   Home,
   Martini,
-  Settings,
   Sparkles,
-  User,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/", label: "Home", icon: Home, match: "exact" as const },
-  { href: "/explore", label: "Explore", icon: Compass, match: "prefix" as const },
   { href: "/create", label: "My Creations", icon: Sparkles, match: "prefix" as const },
-  { href: "/explore", label: "Favorites", icon: Bookmark, match: "explore" as const },
+  { href: "/favorites", label: "Favorites", icon: Bookmark, match: "prefix" as const },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -28,9 +24,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="grain flex min-h-screen bg-ivory">
       <aside className="hidden w-56 shrink-0 flex-col border-r border-border/80 bg-[#faf8f4] px-5 py-8 lg:flex">
         <Link href="/" className="mb-10 flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-full bg-olive/10 text-olive">
-            <Martini className="size-4" strokeWidth={1.5} />
-          </span>
+          <Martini className="size-6 text-olive" strokeWidth={1.5} />
           <span className="font-serif text-xl font-medium tracking-tight text-charcoal">
             Mood Mix
           </span>
@@ -38,14 +32,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <nav className="flex flex-1 flex-col gap-0.5">
           {NAV.map((item) => {
-            const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href) && item.label !== "Favorites";
-            const isFavorites = item.label === "Favorites";
-            const isActive = isFavorites
-              ? pathname === "/explore"
-              : active;
+            const isActive =
+              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
             return (
               <Link
@@ -65,22 +53,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <div className="mt-auto space-y-1 border-t border-border/60 pt-6">
-          <Link
-            href="/create"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-warm transition-colors hover:bg-stone/50 hover:text-charcoal"
-          >
-            <User className="size-4" strokeWidth={1.5} />
-            Profile
-          </Link>
-          <button
-            type="button"
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-warm transition-colors hover:bg-stone/50 hover:text-charcoal"
-          >
-            <Settings className="size-4" strokeWidth={1.5} />
-            Settings
-          </button>
-        </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
