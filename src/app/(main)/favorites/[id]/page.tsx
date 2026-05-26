@@ -14,7 +14,7 @@ export default function FavoriteDetailPage({
 }) {
   const { id } = params;
   const router = useRouter();
-  const { favorites, isSaved, addFavorite, removeFavorite } = useFavorites();
+  const { favorites, isSaved, addFavorite } = useFavorites();
   const [saved, setSaved] = useState<SavedRecipe | null | undefined>(undefined);
 
   useEffect(() => {

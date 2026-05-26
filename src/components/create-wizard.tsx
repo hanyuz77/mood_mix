@@ -22,8 +22,6 @@ import { cn } from "@/lib/utils";
 import { useFavorites } from "@/lib/favorites";
 
 const CUSTOM_MAX = 200;
-const RESULT_IMAGE =
-  "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1e?w=900&q=85";
 
 type Step = 1 | 2 | 3;
 
@@ -32,13 +30,6 @@ function parseIngredients(raw: string): string[] {
     .split(/[\n,]+/)
     .map((s) => s.trim())
     .filter(Boolean);
-}
-
-function formatTags(profile: CocktailRecipe["flavorProfile"]): string {
-  return profile
-    .slice(0, 4)
-    .map((t) => t.charAt(0).toUpperCase() + t.slice(1))
-    .join(" · ");
 }
 
 export function CreateWizard() {
@@ -52,8 +43,6 @@ export function CreateWizard() {
   const [recipe, setRecipe] = useState<CocktailRecipe | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
-  const [imageError, setImageError] = useState<string | null>(null);
-  const [showRecipe, setShowRecipe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingPhase, setLoadingPhase] = useState<"recipe" | "photo">("recipe");
   const [error, setError] = useState<string | null>(null);
