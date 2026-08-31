@@ -36,7 +36,8 @@ describe("cocktailRecipeSchema", () => {
   });
 
   it("rejects missing required fields", () => {
-    const { name: _omitted, ...withoutName } = VALID_RECIPE;
+    const withoutName = { ...VALID_RECIPE };
+    delete (withoutName as { name?: string }).name;
     const result = cocktailRecipeSchema.safeParse(withoutName);
     expect(result.success).toBe(false);
   });
